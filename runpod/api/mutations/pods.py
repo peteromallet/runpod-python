@@ -6,6 +6,7 @@ Runpod | API Wrapper | Mutations | Pods
 
 from typing import List, Optional
 import re
+import json
 
 
 def generate_pod_deployment_mutation(
@@ -114,7 +115,7 @@ def generate_pod_deployment_mutation(
         input_fields.append("dataCenterId: null")
 
     if docker_args is not None:
-        input_fields.append(f'dockerArgs: "{docker_args}"')
+        input_fields.append(f"dockerArgs: {json.dumps(docker_args)}")
     if country_code is not None:
         input_fields.append(f'countryCode: "{country_code}"')
     if container_disk_in_gb is not None:
