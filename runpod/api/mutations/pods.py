@@ -104,7 +104,8 @@ def generate_pod_deployment_mutation(
     else:
         if instance_id is not None:
             input_fields.append(f'instanceId: "{instance_id}"')
-        template_id = template_id or "runpod-ubuntu"
+        if not image_name:
+            template_id = template_id or "runpod-ubuntu"
 
     # Optional Fields
     if data_center_id is not None:
