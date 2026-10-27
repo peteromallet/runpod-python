@@ -5,6 +5,7 @@ Runpod | API Wrapper | Mutations | Pods
 # pylint: disable=too-many-arguments, too-many-locals, too-many-branches
 
 from typing import List, Optional
+import re
 
 
 def generate_pod_deployment_mutation(
@@ -31,6 +32,7 @@ def generate_pod_deployment_mutation(
     min_download: Optional[int] = None,
     min_upload: Optional[int] = None,
     instance_id: Optional[str] = None,
+    min_cuda_version: Optional[str] = None,
 ) -> str:
     """
     Generates a mutation to deploy a pod on demand.
@@ -64,6 +66,9 @@ def generate_pod_deployment_mutation(
         str: GraphQL mutation string
     """
     input_fields = []
+    if min_cuda_version is not None:
+        if not re.fullmatch(r"\d+\.\d+", min_cuda_version) or allowed_cuda_versions:
+            raise ValueError("minimum CUDA must be a version and cannot be combined with exact CUDA versions")
 
     # Required Fields
     input_fields.extend([
@@ -92,6 +97,8 @@ def generate_pod_deployment_mutation(
         if allowed_cuda_versions is not None:
             cuda_versions = ", ".join(f'"{v}"' for v in allowed_cuda_versions)
             input_fields.append(f"allowedCudaVersions: [{cuda_versions}]")
+        if min_cuda_version is not None:
+            input_fields.append(f'minCudaVersion: "{min_cuda_version}"')
 
     # CPU Pod Fields
     else:

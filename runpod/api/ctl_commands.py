@@ -134,6 +134,7 @@ def create_pod(
     min_download = None,
     min_upload = None,
     instance_id: Optional[str] = None,
+    min_cuda_version: Optional[str] = None,
 ) -> dict:
     """
     Create a pod
@@ -209,6 +210,7 @@ def create_pod(
             min_download,
             min_upload,
             instance_id,
+            min_cuda_version,
         )
     )
 
