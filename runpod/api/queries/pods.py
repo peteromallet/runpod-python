@@ -37,6 +37,7 @@ query myPods {
             }
             machine {
                 gpuDisplayName
+                dataCenterId
             }
         }
     }
@@ -83,6 +84,7 @@ def generate_pod_query(pod_id):
             }}
             machine {{
                 gpuDisplayName
+                dataCenterId
             }}
         }}
     }}
