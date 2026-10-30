@@ -110,6 +110,24 @@ def get_pod(pod_id: str, api_key: Optional[str] = None):
     return raw_response["data"]["pod"]
 
 
+def get_pod_mounts(pod_id: str, api_key: Optional[str] = None) -> dict:
+    """Read a fresh, minimal exact-pod typed mount projection.
+
+    This deliberately does not use account lists, a deployment request, or the
+    broad status projection as a substitute for the provider observation.
+    """
+    raw_response = run_graphql_query(
+        pod_queries.generate_pod_mounts_query(pod_id), api_key=api_key
+    )
+    if isinstance(raw_response, dict) and raw_response.get("errors"):
+        raise ValueError("Exact-pod mount observation is unavailable")
+    data = raw_response.get("data") if isinstance(raw_response, dict) else None
+    pod = data.get("pod") if isinstance(data, dict) else None
+    if not isinstance(pod, dict) or pod.get("id") != pod_id:
+        raise ValueError("Exact-pod mount observation is unavailable")
+    return pod
+
+
 def create_pod(
     name: str,
     image_name: Optional[str] = "",
